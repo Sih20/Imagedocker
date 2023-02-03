@@ -1,0 +1,29 @@
+pelineContext = [:]
+ node{
+
+    def registryProjet 'registry.gitlab.com/xavki/presentations-jenkins'
+          def IMAGE="$(registryProjet): version-s(env.BUILD_ID}"
+
+          echo "IMAGE = $IMAGE"
+
+     stage('clone') {
+
+                         checkout scm
+
+                }
+
+                def img stage('Build') {
+
+                                       docker.build("$IMAGE", '.')
+
+                }
+
+                stage('Run') {
+
+                                       img withRun("--name run-$BUILD_ID -p 80:80") { c ->
+
+                                               sh 'curl localhost'
+
+           }
+
+                }
